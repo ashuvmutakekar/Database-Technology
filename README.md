@@ -1,1 +1,2 @@
 # Database-Technology
+Daily Assignment
