@@ -1,0 +1,84 @@
+Assignment 7
+
+1.
+mysql> use assignment;
+Database changed
+mysql> select deptno ,sum(sal) from emp group by deptno;
++--------+----------+
+| deptno | sum(sal) |
++--------+----------+
+|     20 | 10875.00 |
+|     30 |  9400.00 |
+|     10 |  8750.00 |
++--------+----------+
+3 rows in set (0.00 sec)
+
+2.
+mysql> select deptno ,sum(sal) from emp group by deptno having sum(sal)>10000;
++--------+----------+
+| deptno | sum(sal) |
++--------+----------+
+|     20 | 10875.00 |
++--------+----------+
+1 row in set (0.00 sec)
+
+3.
+
+mysql> select job ,sum(sal) from emp where deptno!=30 group by job having sum(sal)>9000;
+Empty set (0.00 sec)
+
+4.
+
+mysql> select job ,max(sal) from emp where job in('manager','clerk','salesman') and deptno in(10,20) group by job order by max(sal) desc;
++---------+----------+
+| job     | max(sal) |
++---------+----------+
+| MANAGER |  2975.00 |
+| CLERK   |  1300.00 |
++---------+----------+
+2 rows in set (0.00 sec)
+
+5.
+mysql> select deptno,job,count(*),sum(sal) from emp group by job,deptno having sum(sal)>3000;
++--------+-----------+----------+----------+
+| deptno | job       | count(*) | sum(sal) |
++--------+-----------+----------+----------+
+|     30 | SALESMAN  |        4 |  5600.00 |
+|     20 | ANALYST   |        2 |  6000.00 |
+|     10 | PRESIDENT |        1 |  5000.00 |
++--------+-----------+----------+----------+
+3 rows in set (0.00 sec)
+6.
+mysql> select deptno,count(*) from emp group by deptno having count(*)>=3;
++--------+----------+
+| deptno | count(*) |
++--------+----------+
+|     20 |        5 |
+|     30 |        6 |
+|     10 |        3 |
++--------+----------+
+3 rows in set (0.00 sec)
+8.
+mysql> select deptno,sum(sal),min(sal) from emp where job='manager' group by deptno ;
++--------+----------+----------+
+| deptno | sum(sal) | min(sal) |
++--------+----------+----------+
+|     20 |  2975.00 |  2975.00 |
+|     30 |  2850.00 |  2850.00 |
+|     10 |  2450.00 |  2450.00 |
++--------+----------+----------+
+3 rows in set (0.00 sec)
+9.
+mysql> select deptno,sum(sal) from emp where job='clerk' group by deptno having count(*)>2;
+Empty set (0.00 sec)
+
+10.
+mysql> select deptno,count(*) from emp where sal>1500 group by deptno ;
++--------+----------+
+| deptno | count(*) |
++--------+----------+
+|     30 |        2 |
+|     20 |        3 |
+|     10 |        2 |
++--------+----------+
+3 rows in set (0.00 sec)

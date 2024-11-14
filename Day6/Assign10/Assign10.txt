@@ -1,0 +1,347 @@
+Assignment 10
+
+1. Practise set operators
+mysql> select * from dept;
++--------+------------+----------+
+| DEPTNO | DNAME      | LOC      |
++--------+------------+----------+
+|     10 | ACCOUNTING | NEW YORK |
+|     20 | RESEARCH   | DALLAS   |
+|     30 | SALES      | CHICAGO  |
+|     40 | OPERATIONS | BOSTON   |
++--------+------------+----------+
+4 rows in set (0.00 sec)
+
+mysql> select * from dept10;
++--------+------------+--------+
+| DEPTNO | DNAME      | LOC    |
++--------+------------+--------+
+|     20 | RESEARCH   | DALLAS |
+|     40 | OPERATIONS | BOSTON |
+|     50 | Marketing  | India  |
+|     60 | HR         | Sweden |
++--------+------------+--------+
+4 rows in set (0.00 sec)
+1.Union :-
+mysql> select * from dept Union select * from dept10;
++--------+------------+----------+
+| DEPTNO | DNAME      | LOC      |
++--------+------------+----------+
+|     10 | ACCOUNTING | NEW YORK |
+|     20 | RESEARCH   | DALLAS   |
+|     30 | SALES      | CHICAGO  |
+|     40 | OPERATIONS | BOSTON   |
+|     50 | Marketing  | India    |
+|     60 | HR         | Sweden   |
++--------+------------+----------+
+6 rows in set (0.00 sec)
+
+2.Union all :-
+mysql> select * from dept Union all select * from dept10;
++--------+------------+----------+
+| DEPTNO | DNAME      | LOC      |
++--------+------------+----------+
+|     10 | ACCOUNTING | NEW YORK |
+|     20 | RESEARCH   | DALLAS   |
+|     30 | SALES      | CHICAGO  |
+|     40 | OPERATIONS | BOSTON   |
+|     20 | RESEARCH   | DALLAS   |
+|     40 | OPERATIONS | BOSTON   |
+|     50 | Marketing  | India    |
+|     60 | HR         | Sweden   |
++--------+------------+----------+
+8 rows in set (0.00 sec)
+
+3.Intersect :-
+mysql> select * from dept intersect select * from dept10;
++--------+------------+--------+
+| DEPTNO | DNAME      | LOC    |
++--------+------------+--------+
+|     20 | RESEARCH   | DALLAS |
+|     40 | OPERATIONS | BOSTON |
++--------+------------+--------+
+2 rows in set (0.00 sec)
+
+4.Except (Minus) :-
+mysql> select * from dept Except select * from dept10;
++--------+------------+----------+
+| DEPTNO | DNAME      | LOC      |
++--------+------------+----------+
+|     10 | ACCOUNTING | NEW YORK |
+|     30 | SALES      | CHICAGO  |
++--------+------------+----------+
+2 rows in set (0.00 sec)
+
+
+2. Practice on delete set null/ cascade
+            on update set null/ cascade
+
+1. on delete set null :-
+mysql> CREATE TABLE trainer ( *n tid VARCHAR(10) PRIMARY KEY, tname VARCHAR(50) NOT NULL, cid VARCHAR(10),    salary DECIMAL(10, 2) DEFAULT 20000,    experience INT CHECK (experience > 10) ,constraint fk_id foreign key(cid) references course(cid) on delete set null);
+Query OK, 0 rows affected (0.05 sec)
+mysql> select * from course;
++-----+--------+-------+
+| cid | cname  | fees  |
++-----+--------+-------+
+| c1  | Core   |  1000 |
+| c2  | linux  |  8000 |
+| c3  | DSA    | 10000 |
+| c4  | Python | 12000 |
+| c5  | DotNet |  5000 |
++-----+--------+-------+
+5 rows in set (0.00 sec)
+
+mysql> select * from trainer;
++-----+--------+------+----------+------------+
+| tid | tname  | cid  | salary   | experience |
++-----+--------+------+----------+------------+
+| t1  | Amit   | c2   | 25000.00 |         12 |
+| t2  | Rajan  | c1   | 22000.00 |         15 |
+| t3  | Shruti | c2   | 24000.00 |         11 |
+| t4  | Arti   | c2   | 23000.00 |         13 |
+| t5  | Sameer | c3   | 21000.00 |         16 |
+| t6  | Sanjay | NULL | 20000.00 |         18 |
+| t7  | Soha   | NULL | 20000.00 |         14 |
++-----+--------+------+----------+------------+
+7 rows in set (0.00 sec)
+
+mysql> delete from course where cid='c2';
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from course;
++-----+--------+-------+
+| cid | cname  | fees  |
++-----+--------+-------+
+| c1  | Core   |  1000 |
+| c3  | DSA    | 10000 |
+| c4  | Python | 12000 |
+| c5  | DotNet |  5000 |
++-----+--------+-------+
+4 rows in set (0.00 sec)
+
+mysql> select * from trainer;
++-----+--------+------+----------+------------+
+| tid | tname  | cid  | salary   | experience |
++-----+--------+------+----------+------------+
+| t1  | Amit   | NULL | 25000.00 |         12 |
+| t2  | Rajan  | c1   | 22000.00 |         15 |
+| t3  | Shruti | NULL | 24000.00 |         11 |
+| t4  | Arti   | NULL | 23000.00 |         13 |
+| t5  | Sameer | c3   | 21000.00 |         16 |
+| t6  | Sanjay | NULL | 20000.00 |         18 |
+| t7  | Soha   | NULL | 20000.00 |         14 |
++-----+--------+------+----------+------------+
+7 rows in set (0.00 sec)
+
+1. on delete cascade :-
+mysql> CREATE TABLE trainer (    tid VARCHAR(10) PRIMARY KEY,    tname VARCHAR(50) NOT NULL,    cid VARCHAR(10),    salary DECIMAL(10, 2) DEFAULT 20000,    experience INT CHECK (experience > 10) ,constraint fk_cd foreign key(cid) references course(cid) on delete cascade);
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> select * from course;
++-----+--------+-------+
+| cid | cname  | fees  |
++-----+--------+-------+
+| c1  | Core   |  1000 |
+| c2  | linux  |  8000 |
+| c3  | DSA    | 10000 |
+| c4  | Python | 12000 |
+| c5  | DotNet |  5000 |
++-----+--------+-------+
+5 rows in set (0.00 sec)
+
+mysql> select * from trainer;
++-----+--------+------+----------+------------+
+| tid | tname  | cid  | salary   | experience |
++-----+--------+------+----------+------------+
+| t1  | Amit   | c2   | 25000.00 |         12 |
+| t2  | Rajan  | c1   | 22000.00 |         15 |
+| t3  | Shruti | c2   | 24000.00 |         11 |
+| t4  | Arti   | c2   | 23000.00 |         13 |
+| t5  | Sameer | c3   | 21000.00 |         16 |
+| t6  | Sanjay | NULL | 20000.00 |         18 |
+| t7  | Soha   | NULL | 20000.00 |         14 |
++-----+--------+------+----------+------------+
+7 rows in set (0.00 sec)
+
+mysql> delete from course where cid='c2';
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from course;
++-----+--------+-------+
+| cid | cname  | fees  |
++-----+--------+-------+
+| c1  | Core   |  1000 |
+| c3  | DSA    | 10000 |
+| c4  | Python | 12000 |
+| c5  | DotNet |  5000 |
++-----+--------+-------+
+4 rows in set (0.00 sec)
+
+mysql> select * from trainer;
++-----+--------+------+----------+------------+
+| tid | tname  | cid  | salary   | experience |
++-----+--------+------+----------+------------+
+| t2  | Rajan  | c1   | 22000.00 |         15 |
+| t5  | Sameer | c3   | 21000.00 |         16 |
+| t6  | Sanjay | NULL | 20000.00 |         18 |
+| t7  | Soha   | NULL | 20000.00 |         14 |
++-----+--------+------+----------+------------+
+4 rows in set (0.00 sec)
+
+1. on update cascade :-
+mysql> CREATE TABLE trainer (    tid VARCHAR(10) PRIMARY KEY,    tname VARCHAR(50) NOT NULL,    cid VARCHAR(10),    salary DECIMAL(10, 2) DEFAULT 20000,    experience INT CHECK (experience > 10) ,constraint fk_cd foreign key(cid) references course(cid) on update cascade);
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> select * from course;
++-----+--------+-------+
+| cid | cname  | fees  |
++-----+--------+-------+
+| c1  | Core   |  1000 |
+| c2  | linux  |  8000 |
+| c3  | DSA    | 10000 |
+| c4  | Python | 12000 |
+| c5  | DotNet |  5000 |
++-----+--------+-------+
+5 rows in set (0.00 sec)
+
+mysql> select * from trainer;
++-----+--------+------+----------+------------+
+| tid | tname  | cid  | salary   | experience |
++-----+--------+------+----------+------------+
+| t1  | Amit   | c2   | 25000.00 |         12 |
+| t2  | Rajan  | c1   | 22000.00 |         15 |
+| t3  | Shruti | c2   | 24000.00 |         11 |
+| t4  | Arti   | c2   | 23000.00 |         13 |
+| t5  | Sameer | c3   | 21000.00 |         16 |
+| t6  | Sanjay | NULL | 20000.00 |         18 |
+| t7  | Soha   | NULL | 20000.00 |         14 |
++-----+--------+------+----------+------------+
+7 rows in set (0.00 sec)
+
+mysql> update course set cid='c6' where cname='linux';
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from course;
++-----+--------+-------+
+| cid | cname  | fees  |
++-----+--------+-------+
+| c1  | Core   |  1000 |
+| c3  | DSA    | 10000 |
+| c4  | Python | 12000 |
+| c5  | DotNet |  5000 |
+| c6  | linux  |  8000 |
++-----+--------+-------+
+5 rows in set (0.00 sec)
+
+mysql> select * from trainer;
++-----+--------+------+----------+------------+
+| tid | tname  | cid  | salary   | experience |
++-----+--------+------+----------+------------+
+| t1  | Amit   | c6   | 25000.00 |         12 |
+| t2  | Rajan  | c1   | 22000.00 |         15 |
+| t3  | Shruti | c6   | 24000.00 |         11 |
+| t4  | Arti   | c6   | 23000.00 |         13 |
+| t5  | Sameer | c3   | 21000.00 |         16 |
+| t6  | Sanjay | NULL | 20000.00 |         18 |
+| t7  | Soha   | NULL | 20000.00 |         14 |
++-----+--------+------+----------+------------+
+7 rows in set (0.00 sec)
+
+4. on update set null :-
+mysql> CREATE TABLE trainer (    tid VARCHAR(10) PRIMARY KEY,    tname VARCHAR(50) NOT NULL,    cid VARCHAR(10),    salary DECIMAL(10, 2) DEFAULT 20000, 
+   experience INT CHECK (experience > 10) ,constraint fk_cd foreign key(cid) references course(cid) on update set null);
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> select * from course;
++-----+--------+-------+
+| cid | cname  | fees  |
++-----+--------+-------+
+| c1  | Core   |  1000 |
+| c2  | linux  |  8000 |
+| c3  | DSA    | 10000 |
+| c4  | Python | 12000 |
+| c5  | DotNet |  5000 |
++-----+--------+-------+
+5 rows in set (0.00 sec)
+
+mysql> select * from trainer;
++-----+--------+------+----------+------------+
+| tid | tname  | cid  | salary   | experience |
++-----+--------+------+----------+------------+
+| t1  | Amit   | c2   | 25000.00 |         12 |
+| t2  | Rajan  | c1   | 22000.00 |         15 |
+| t3  | Shruti | c2   | 24000.00 |         11 |
+| t4  | Arti   | c2   | 23000.00 |         13 |
+| t5  | Sameer | c3   | 21000.00 |         16 |
+| t6  | Sanjay | NULL | 20000.00 |         18 |
+| t7  | Soha   | NULL | 20000.00 |         14 |
++-----+--------+------+----------+------------+
+7 rows in set (0.00 sec)
+
+
+mysql> update course set cid='c6' where cname='linux';
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from course;
++-----+--------+-------+
+| cid | cname  | fees  |
++-----+--------+-------+
+| c1  | Core   |  1000 |
+| c3  | DSA    | 10000 |
+| c4  | Python | 12000 |
+| c5  | DotNet |  5000 |
+| c6  | linux  |  8000 |
++-----+--------+-------+
+5 rows in set (0.00 sec)
+
+mysql> select * from trainer;
++-----+--------+------+----------+------------+
+| tid | tname  | cid  | salary   | experience |
++-----+--------+------+----------+------------+
+| t1  | Amit   | NULL | 25000.00 |         12 |
+| t2  | Rajan  | c1   | 22000.00 |         15 |
+| t3  | Shruti | NULL | 24000.00 |         11 |
+| t4  | Arti   | NULL | 23000.00 |         13 |
+| t5  | Sameer | c3   | 21000.00 |         16 |
+| t6  | Sanjay | NULL | 20000.00 |         18 |
+| t7  | Soha   | NULL | 20000.00 |         14 |
++-----+--------+------+----------+------------+
+7 rows in set (0.00 sec)
+
+
+3.auto increment :-
+
+mysql> create table demo(id int primary key auto_increment,name varchar(12));
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> insert into demo(name) values('raj'),('seema');
+Query OK, 2 rows affected (0.01 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> select* from demo;
++----+-------+
+| id | name  |
++----+-------+
+|  1 | raj   |
+|  2 | seema |
++----+-------+
+2 rows in set (0.00 sec)
+
+mysql> insert into demo values(5,'sameer');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into demo(name) values('kirti');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select* from demo;
++----+--------+
+| id | name   |
++----+--------+
+|  1 | raj    |
+|  2 | seema  |
+|  5 | sameer |
+|  6 | kirti  |
++----+--------+
+4 rows in set (0.00 sec)

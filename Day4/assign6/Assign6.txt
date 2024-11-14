@@ -1,0 +1,118 @@
+Assignment -6
+1.
+mysql> create table dept100 like day2.dept;
+Query OK, 0 rows affected (0.01 sec)
+mysql> describe dept100;
++--------+-------------+------+-----+---------+-------+
+| Field  | Type        | Null | Key | Default | Extra |
++--------+-------------+------+-----+---------+-------+
+| DEPTNO | int(11)     | YES  |     | NULL    |       |
+| DNAME  | varchar(14) | YES  |     | NULL    |       |
+| LOC    | varchar(13) | YES  |     | NULL    |       |
++--------+-------------+------+-----+---------+-------+
+3 rows in set (0.01 sec)
+mysql> create table emp100 like day2.emp;
+Query OK, 0 rows affected (0.03 sec)
+mysql> describe emp100;
++----------+--------------+------+-----+---------+-------+
+| Field    | Type         | Null | Key | Default | Extra |
++----------+--------------+------+-----+---------+-------+
+| EMPNO    | int(11)      | NO   |     | NULL    |       |
+| ENAME    | varchar(12)  | YES  |     | NULL    |       |
+| JOB      | varchar(9)   | YES  |     | NULL    |       |
+| MGR      | int(11)      | YES  |     | NULL    |       |
+| HIREDATE | date         | YES  |     | NULL    |       |
+| SAL      | decimal(7,2) | YES  |     | NULL    |       |
+| COMM     | decimal(7,2) | YES  |     | NULL    |       |
+| DEPTNO   | int(11)      | YES  |     | NULL    |       |
++----------+--------------+------+-----+---------+-------+
+8 rows in set (0.01 sec)
+2.
+mysql> alter table dept100 add constraint pk_dept primary key(deptno);
+Query OK, 0 rows affected (0.04 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> describe dept100;
++--------+-------------+------+-----+---------+-------+
+| Field  | Type        | Null | Key | Default | Extra |
++--------+-------------+------+-----+---------+-------+
+| DEPTNO | int(11)     | NO   | PRI | 0       |       |
+| DNAME  | varchar(14) | YES  |     | NULL    |       |
+| LOC    | varchar(13) | YES  |     | NULL    |       |
++--------+-------------+------+-----+---------+-------+
+3 rows in set (0.01 sec)
+3.
+mysql> alter table emp100 add constraint pk_emp primary key(empno);
+Query OK, 0 rows affected (0.01 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> describe emp100;
++----------+--------------+------+-----+---------+-------+
+| Field    | Type         | Null | Key | Default | Extra |
++----------+--------------+------+-----+---------+-------+
+| EMPNO    | int(11)      | NO   | PRI | NULL    |       |
+| ENAME    | varchar(12)  | YES  |     | NULL    |       |
+| JOB      | varchar(9)   | YES  |     | NULL    |       |
+| MGR      | int(11)      | YES  |     | NULL    |       |
+| HIREDATE | date         | YES  |     | NULL    |       |
+| SAL      | decimal(7,2) | YES  |     | NULL    |       |
+| COMM     | decimal(7,2) | YES  |     | NULL    |       |
+| DEPTNO   | int(11)      | YES  |     | NULL    |       |
++----------+--------------+------+-----+---------+-------+
+8 rows in set (0.01 sec)
+
+2.
+2.1
+mysql> insert into course values('c1','Core',1000),('c2','Linux',8000),('c3','DSA',10000),('c4', 'Python',12000),('c5','DotNet',null);
+Query OK, 5 rows affected (0.00 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+mysql> describe course;
++-------+-------------+------+-----+---------+-------+
+| Field | Type        | Null | Key | Default | Extra |
++-------+-------------+------+-----+---------+-------+
+| cid   | char(2)     | NO   | PRI |         |       |
+| cname | varchar(12) | NO   | UNI | NULL    |       |
+| fees  | float       | YES  |     | 500     |       |
++-------+-------------+------+-----+---------+-------+
+3 rows in set (0.01 sec)
+
+mysql> select * from course;
++-----+--------+-------+
+| cid | cname  | fees  |
++-----+--------+-------+
+| c1  | Core   |  1000 |
+| c2  | Linux  |  8000 |
+| c3  | DSA    | 10000 |
+| c4  | Python | 12000 |
+| c5  | DotNet |  NULL |
++-----+--------+-------+
+5 rows in set (0.00 sec)
+2.2
+
+mysql> create table trainer(tid char(2), tname varchar(12) not null,cid char(2),salary float default 20000,exp int check(exp>10), constraint pk_tr primary key(tid),constraint fk_tr foreign key(cid) references course(cid));
+Query OK, 0 rows affected (0.01 sec)
+mysql> describe trainer;
++--------+-------------+------+-----+---------+-------+
+| Field  | Type        | Null | Key | Default | Extra |
++--------+-------------+------+-----+---------+-------+
+| tid    | char(2)     | NO   | PRI |         |       |
+| tname  | varchar(12) | NO   |     | NULL    |       |
+| cid    | char(2)     | YES  | MUL | NULL    |       |
+| salary | float       | YES  |     | 20000   |       |
+| exp    | int(11)     | YES  |     | NULL    |       |
++--------+-------------+------+-----+---------+-------+
+5 rows in set (0.01 sec)
+
+mysql> select * from trainer;
++-----+--------+------+--------+------+
+| tid | tname  | cid  | salary | exp  |
++-----+--------+------+--------+------+
+| t1  | Amit   | c2   |  12000 |   11 |
+| t2  | Rajan  | c1   |  30000 |   25 |
+| t3  | Shruti | c2   |  15000 |   15 |
+| t4  | Arti   | c2   |  35000 |   30 |
+| t5  | Sameer | c3   |  20000 |   17 |
+| t6  | Sanjay | NULL |  75000 |   12 |
+| t7  | Soha   | NULL |  25000 |   11 |
++-----+--------+------+--------+------+
+7 rows in set (0.00 sec)

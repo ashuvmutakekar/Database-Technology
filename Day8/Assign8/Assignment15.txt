@@ -1,0 +1,585 @@
+Assignment 15
+1. Write a procedure which accepts in parameter
+as empno and calculates total salary for that employee. Display salary out of procedure.
+total salary = sal +comm
+
+---->
+mysql> delimiter ??
+mysql> create procedure cal_sal(in no int)
+    -> begin
+    -> select empno,comm,sal,(comm+sal) total_sal from emp where empno=no;
+    -> end ??
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> call cal_sal(7844);
+    -> ??
++-------+------+---------+-----------+
+| empno | comm | sal     | total_sal |
++-------+------+---------+-----------+
+|  7844 | 0.00 | 1500.00 |   1500.00 |
++-------+------+---------+-----------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+
+2.Write a procedure which takes empno of 2 employees. Compare salaries of employees and display ename,sal and job for the employee who
+earns more salary out of procedure. 
+----->
+mysql> create procedure compare_sal(in no1 int,in no2 int)
+    ->      begin
+    ->      declare sal1 decimal(7,2);
+    ->      declare sal2 decimal(7,2);
+    ->      select sal into sal1 from emp where empno=no1;
+    ->      select sal into sal2 from emp where empno=no2;
+    ->      if sal1>sal2
+    ->      then
+    ->      select ename,sal,job from emp where empno=no1;
+    ->      else
+    ->      select ename,sal,job from emp where empno=no2;
+    ->      end if;
+    ->      end //
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> delimiter ;
+mysql> call compare_sal(7788,7839);
++-------+---------+-----------+
+| ename | sal     | job       |
++-------+---------+-----------+
+| KING  | 5000.00 | PRESIDENT |
++-------+---------+-----------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+
+
+3. Write a procedure which accepts ename and job as parameters and calculates salary hike depending on job. 
+
+----->
+mysql> create procedure hike_sal(in name varchar(20),in j varchar(20))
+    ->      begin
+    ->       if j='clerk'
+    ->      then
+    ->       select ename,job,sal,(sal+sal*0.07) new_sal from emp where job=j and ename=name;
+    ->       elseif j='analyst'
+    ->       then
+    ->      select ename,job,sal,(sal+sal*0.05) new_sal from emp where job=j and ename=name;
+    ->      elseif j='manager'
+    ->       then
+    ->      select ename,job,sal,(sal+sal*0.02) new_sal from emp where job=j and ename=name;
+    ->      else
+    ->      select ename,job,sal,sal new_sal from emp where job=j and ename=name;
+    ->      end if;
+    ->      end //
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> call hike_sal('smith','clerk');
+    -> //
++-------+-------+--------+----------+
+| ename | job   | sal    | new_sal  |
++-------+-------+--------+----------+
+| SMITH | CLERK | 800.00 | 856.0000 |
++-------+-------+--------+----------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.01 sec)
+
+
+4. Pass empno to the procedure. Find if employee exists in the table. If so, print sal out of procedure else print sal as 0.
+---->
+  mysql> delimiter //
+mysql> create procedure get_sal(in eno int)
+    -> begin
+    -> if eno in(select empno from emp )
+    -> then
+    -> select empno,sal from emp where empno=eno;
+    -> else
+    -> select eno 'empno',0 'sal';
+    -> end if;
+    -> end//
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> call get_sal(7902)//
++-------+---------+
+| empno | sal     |
++-------+---------+
+|  7902 | 3000.00 |
++-------+---------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> call get_sal(1000)//
++-------+-----+
+| empno | sal |
++-------+-----+
+|  1000 |   0 |
++-------+-----+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.01 sec)
+
+5. Write a function which will display email for employees working as salesman.
+   email generated is as follows
+   2nd and 3rd letter of name+last 2 letters of job in caps + deptno+'@mycompany.com'.
+----->
+mysql> create function get_email(name varchar(20), job varchar(20),dno int)
+    -> returns varchar(50)
+    -> begin
+    -> declare email varchar(50);
+    -> set email=concat(substr(name,1,2),substr(job,length(job)-1,2),dno,'@mycompany.com');
+    -> return email;
+    -> end//
+Query OK, 0 rows affected (0.01 sec)
+
+mysql>
+mysql> select empno,ename,job,deptno,get_email(ename,job,deptno) email from emp where job='salesman'//
++-------+--------+----------+--------+----------------------+
+| empno | ename  | job      | deptno | email                |
++-------+--------+----------+--------+----------------------+
+|  7499 | ALLEN  | SALESMAN |     30 | ALAN30@mycompany.com |
+|  7521 | WARD   | SALESMAN |     30 | WAAN30@mycompany.com |
+|  7654 | MARTIN | SALESMAN |     30 | MAAN30@mycompany.com |
+|  7844 | TURNER | SALESMAN |     30 | TUAN30@mycompany.com |
++-------+--------+----------+--------+----------------------+
+4 rows in set (0.00 sec)
+
+
+
+6. Write a function which will return square of the number.
+   Call this function in the procedure 'calculate'. Pass any number to this procedure and call a function in the procedure by passing
+   a number.
+  
+----->
+mysql> create function cal_square(no int)
+    -> returns float
+    -> begin
+    -> declare res float;
+    -> set res=no*no;
+    -> return res;
+    -> end//
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> create procedure calculate(in no int)
+    -> begin
+    -> declare square float;
+    -> set square=cal_square(no);
+    -> select square;
+    -> end//
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> call calculate(12)//
++--------+
+| square |
++--------+
+|    144 |
++--------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.01 sec)
+7. wite a cursor which will display salary hike as follows
+   if employee is clerk then hike is 10%
+   if employee is salesman then hike is 7%
+   if employee is analyst then hike is 5%
+   others no hike
+----->
+mysql> delimiter //
+mysql> create procedure hike_sal_cur()
+    ->      begin
+    ->      declare flag int default 0;
+    ->      declare i int;
+    ->      declare j varchar(20);
+    ->      declare n varchar(20);
+    ->      declare s float;
+    ->      declare cur cursor  for
+    ->       select empno,ename,job,sal from emp;
+    ->       declare continue handler for not found set flag=1;
+    ->        open cur;
+    ->       label:loop
+    ->       fetch cur into i,n,j,s;
+    ->       if flag=1
+    ->        then
+    ->        leave label;
+    ->       else
+    ->       if j='clerk'
+    ->       then
+    ->       select i 'empno',n 'ename',j 'job',s 'sal',(s+s*0.1) new_sal;
+    ->       elseif j='analyst'
+    ->       then
+    ->       select i 'empno',n 'ename',j 'job',s 'sal',(s+s*0.05) new_sal;
+    ->       elseif j='salesman'
+    ->       then
+    ->        select i 'empno',n 'ename',j 'job',s 'sal',(s+s*0.07) new_sal;
+    ->        else
+    ->        select i 'empno',n 'ename',j 'job',s 'sal',s 'new_sal';
+    ->        end if;
+    ->       end if;
+    ->       end loop;
+    ->       close cur;
+    ->
+    ->       end //
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> call hike_sal_cur;
+    -> //
++-------+-------+-------+------+---------+
+| empno | ename | job   | sal  | new_sal |
++-------+-------+-------+------+---------+
+|  7369 | SMITH | CLERK |  800 |     880 |
++-------+-------+-------+------+---------+
+1 row in set (0.00 sec)
+
++-------+-------+----------+------+---------+
+| empno | ename | job      | sal  | new_sal |
++-------+-------+----------+------+---------+
+|  7499 | ALLEN | SALESMAN | 1600 |    1712 |
++-------+-------+----------+------+---------+
+1 row in set (0.01 sec)
+
++-------+-------+----------+------+---------+
+| empno | ename | job      | sal  | new_sal |
++-------+-------+----------+------+---------+
+|  7521 | WARD  | SALESMAN | 1250 |  1337.5 |
++-------+-------+----------+------+---------+
+1 row in set (0.02 sec)
+
++-------+-------+---------+------+---------+
+| empno | ename | job     | sal  | new_sal |
++-------+-------+---------+------+---------+
+|  7566 | JONES | MANAGER | 2975 |    2975 |
++-------+-------+---------+------+---------+
+1 row in set (0.03 sec)
+
++-------+--------+----------+------+---------+
+| empno | ename  | job      | sal  | new_sal |
++-------+--------+----------+------+---------+
+|  7654 | MARTIN | SALESMAN | 1250 |  1337.5 |
++-------+--------+----------+------+---------+
+1 row in set (0.04 sec)
+
++-------+-------+---------+------+---------+
+| empno | ename | job     | sal  | new_sal |
++-------+-------+---------+------+---------+
+|  7698 | BLAKE | MANAGER | 2850 |    2850 |
++-------+-------+---------+------+---------+
+1 row in set (0.05 sec)
+
++-------+-------+---------+------+---------+
+| empno | ename | job     | sal  | new_sal |
++-------+-------+---------+------+---------+
+|  7782 | CLARK | MANAGER | 2450 |    2450 |
++-------+-------+---------+------+---------+
+1 row in set (0.06 sec)
+
++-------+-------+---------+------+---------+
+| empno | ename | job     | sal  | new_sal |
++-------+-------+---------+------+---------+
+|  7788 | SCOTT | ANALYST | 3000 |    3150 |
++-------+-------+---------+------+---------+
+1 row in set (0.08 sec)
+
++-------+-------+-----------+------+---------+
+| empno | ename | job       | sal  | new_sal |
++-------+-------+-----------+------+---------+
+|  7839 | KING  | PRESIDENT | 5000 |    5000 |
++-------+-------+-----------+------+---------+
+1 row in set (0.08 sec)
+
++-------+--------+----------+------+---------+
+| empno | ename  | job      | sal  | new_sal |
++-------+--------+----------+------+---------+
+|  7844 | TURNER | SALESMAN | 1500 |    1605 |
++-------+--------+----------+------+---------+
+1 row in set (0.10 sec)
+
++-------+-------+-------+------+---------+
+| empno | ename | job   | sal  | new_sal |
++-------+-------+-------+------+---------+
+|  7876 | ADAMS | CLERK | 1100 |    1210 |
++-------+-------+-------+------+---------+
+1 row in set (0.11 sec)
+
++-------+-------+-------+------+---------+
+| empno | ename | job   | sal  | new_sal |
++-------+-------+-------+------+---------+
+|  7900 | JAMES | CLERK |  950 |    1045 |
++-------+-------+-------+------+---------+
+1 row in set (0.12 sec)
+
++-------+-------+---------+------+---------+
+| empno | ename | job     | sal  | new_sal |
++-------+-------+---------+------+---------+
+|  7902 | FORD  | ANALYST | 3000 |    3150 |
++-------+-------+---------+------+---------+
+1 row in set (0.12 sec)
+
++-------+--------+-------+------+---------+
+| empno | ename  | job   | sal  | new_sal |
++-------+--------+-------+------+---------+
+|  7934 | MILLER | CLERK | 1300 |    1430 |
++-------+--------+-------+------+---------+
+1 row in set (0.13 sec)
+
++-------+--------+------+-------+---------+
+| empno | ename  | job  | sal   | new_sal |
++-------+--------+------+-------+---------+
+|   999 | Sakshi | NULL | 89000 |   89000 |
++-------+--------+------+-------+---------+
+1 row in set (0.14 sec)
+
++-------+--------+------+-------+---------+
+| empno | ename  | job  | sal   | new_sal |
++-------+--------+------+-------+---------+
+|   999 | Sakshi | NULL | 98000 |   98000 |
++-------+--------+------+-------+---------+
+1 row in set (0.16 sec)
+
+Query OK, 0 rows affected (0.16 sec)
+8. Try creating index.
+---->
+mysql> create index index_skill on faculty(sp_skill1);
+Query OK, 0 rows affected (0.04 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> CREATE INDEX idx_name ON  faculty(fid, fname);
+Query OK, 0 rows affected (0.05 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM faculty USE INDEX (idx_deptno) WHERE fid = 10 and fname='Amol';
++-----+-------+-----------+-----------+
+| fid | fname | sp_skill1 | sp_skill2 |
++-----+-------+-----------+-----------+
+|  10 | Amol  | Database  | Java      |
++-----+-------+-----------+-----------+
+1 row in set (0.00 sec)
+
+9. Practice commit and rollback.
+----->
+mysql> set autocommit=0;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> insert into emp10(empno,ename)values(1234,'Sanjivni');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select * from emp10;
++-------+----------+-----------+------+------------+----------+---------+--------+
+| EMPNO | ENAME    | JOB       | MGR  | HIREDATE   | SAL      | COMM    | DEPTNO |
++-------+----------+-----------+------+------------+----------+---------+--------+
+|  7369 | SMITH    | CLERK     | 7902 | 1980-12-17 |   800.00 |    NULL |     20 |
+|  7499 | ALLEN    | SALESMAN  | 7698 | 1981-02-20 |  1600.00 |  300.00 |     30 |
+|  7521 | WARD     | SALESMAN  | 7698 | 1981-02-22 |  1250.00 |  500.00 |     30 |
+|  7566 | JONES    | MANAGER   | 7839 | 1981-04-02 |  2975.00 |    NULL |     20 |
+|  7654 | MARTIN   | SALESMAN  | 7698 | 1981-09-28 |  1250.00 | 1400.00 |     30 |
+|  7698 | BLAKE    | MANAGER   | 7839 | 1981-05-01 |  2850.00 |    NULL |     30 |
+|  7782 | CLARK    | MANAGER   | 7839 | 1981-06-09 |  2450.00 |    NULL |     10 |
+|  7788 | SCOTT    | ANALYST   | 7566 | 1982-12-09 |  3000.00 |    NULL |     20 |
+|  7839 | KING     | PRESIDENT | NULL | 1981-11-17 |  5000.00 |    NULL |     10 |
+|  7844 | TURNER   | SALESMAN  | 7698 | 1981-09-08 |  1500.00 |    0.00 |     30 |
+|  7876 | ADAMS    | CLERK     | 7788 | 1983-01-12 |  1100.00 |    NULL |     20 |
+|  7900 | JAMES    | CLERK     | 7698 | 1981-12-03 |   950.00 |    NULL |     30 |
+|  7902 | FORD     | ANALYST   | 7566 | 1981-12-03 |  3000.00 |    NULL |     20 |
+|  7934 | MILLER   | CLERK     | 7782 | 1982-01-23 |  1300.00 |    NULL |     10 |
+|   999 | Sakshi   | NULL      | NULL | NULL       | 89000.00 |    NULL |   NULL |
+|   999 | Sakshi   | NULL      | NULL | NULL       | 98000.00 |    NULL |   NULL |
+|  1111 | Geeta    | NULL      | NULL | NULL       | 10000.00 |  300.00 |     20 |
+|  2222 | Raj      | Analyst   | NULL | NULL       |     NULL |    NULL |     20 |
+|  2000 | sameer   | NULL      | NULL | NULL       | 15000.00 |    NULL |   NULL |
+|  1234 | Sanjivni | NULL      | NULL | NULL       |     NULL |    NULL |   NULL |
++-------+----------+-----------+------+------------+----------+---------+--------+
+20 rows in set (0.00 sec)
+
+mysql> rollback;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> select * from emp10;
++-------+--------+-----------+------+------------+----------+---------+--------+
+| EMPNO | ENAME  | JOB       | MGR  | HIREDATE   | SAL      | COMM    | DEPTNO |
++-------+--------+-----------+------+------------+----------+---------+--------+
+|  7369 | SMITH  | CLERK     | 7902 | 1980-12-17 |   800.00 |    NULL |     20 |
+|  7499 | ALLEN  | SALESMAN  | 7698 | 1981-02-20 |  1600.00 |  300.00 |     30 |
+|  7521 | WARD   | SALESMAN  | 7698 | 1981-02-22 |  1250.00 |  500.00 |     30 |
+|  7566 | JONES  | MANAGER   | 7839 | 1981-04-02 |  2975.00 |    NULL |     20 |
+|  7654 | MARTIN | SALESMAN  | 7698 | 1981-09-28 |  1250.00 | 1400.00 |     30 |
+|  7698 | BLAKE  | MANAGER   | 7839 | 1981-05-01 |  2850.00 |    NULL |     30 |
+|  7782 | CLARK  | MANAGER   | 7839 | 1981-06-09 |  2450.00 |    NULL |     10 |
+|  7788 | SCOTT  | ANALYST   | 7566 | 1982-12-09 |  3000.00 |    NULL |     20 |
+|  7839 | KING   | PRESIDENT | NULL | 1981-11-17 |  5000.00 |    NULL |     10 |
+|  7844 | TURNER | SALESMAN  | 7698 | 1981-09-08 |  1500.00 |    0.00 |     30 |
+|  7876 | ADAMS  | CLERK     | 7788 | 1983-01-12 |  1100.00 |    NULL |     20 |
+|  7900 | JAMES  | CLERK     | 7698 | 1981-12-03 |   950.00 |    NULL |     30 |
+|  7902 | FORD   | ANALYST   | 7566 | 1981-12-03 |  3000.00 |    NULL |     20 |
+|  7934 | MILLER | CLERK     | 7782 | 1982-01-23 |  1300.00 |    NULL |     10 |
+|   999 | Sakshi | NULL      | NULL | NULL       | 89000.00 |    NULL |   NULL |
+|   999 | Sakshi | NULL      | NULL | NULL       | 98000.00 |    NULL |   NULL |
+|  1111 | Geeta  | NULL      | NULL | NULL       | 10000.00 |  300.00 |     20 |
+|  2222 | Raj    | Analyst   | NULL | NULL       |     NULL |    NULL |     20 |
+|  2000 | sameer | NULL      | NULL | NULL       | 15000.00 |    NULL |   NULL |
++-------+--------+-----------+------+------------+----------+---------+--------+
+19 rows in set (0.00 sec)
+
+mysql> insert into emp10(empno,ename)values(1234,'Sanjivni');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> commit;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> select * from emp10;
++-------+----------+-----------+------+------------+----------+---------+--------+
+| EMPNO | ENAME    | JOB       | MGR  | HIREDATE   | SAL      | COMM    | DEPTNO |
++-------+----------+-----------+------+------------+----------+---------+--------+
+|  7369 | SMITH    | CLERK     | 7902 | 1980-12-17 |   800.00 |    NULL |     20 |
+|  7499 | ALLEN    | SALESMAN  | 7698 | 1981-02-20 |  1600.00 |  300.00 |     30 |
+|  7521 | WARD     | SALESMAN  | 7698 | 1981-02-22 |  1250.00 |  500.00 |     30 |
+|  7566 | JONES    | MANAGER   | 7839 | 1981-04-02 |  2975.00 |    NULL |     20 |
+|  7654 | MARTIN   | SALESMAN  | 7698 | 1981-09-28 |  1250.00 | 1400.00 |     30 |
+|  7698 | BLAKE    | MANAGER   | 7839 | 1981-05-01 |  2850.00 |    NULL |     30 |
+|  7782 | CLARK    | MANAGER   | 7839 | 1981-06-09 |  2450.00 |    NULL |     10 |
+|  7788 | SCOTT    | ANALYST   | 7566 | 1982-12-09 |  3000.00 |    NULL |     20 |
+|  7839 | KING     | PRESIDENT | NULL | 1981-11-17 |  5000.00 |    NULL |     10 |
+|  7844 | TURNER   | SALESMAN  | 7698 | 1981-09-08 |  1500.00 |    0.00 |     30 |
+|  7876 | ADAMS    | CLERK     | 7788 | 1983-01-12 |  1100.00 |    NULL |     20 |
+|  7900 | JAMES    | CLERK     | 7698 | 1981-12-03 |   950.00 |    NULL |     30 |
+|  7902 | FORD     | ANALYST   | 7566 | 1981-12-03 |  3000.00 |    NULL |     20 |
+|  7934 | MILLER   | CLERK     | 7782 | 1982-01-23 |  1300.00 |    NULL |     10 |
+|   999 | Sakshi   | NULL      | NULL | NULL       | 89000.00 |    NULL |   NULL |
+|   999 | Sakshi   | NULL      | NULL | NULL       | 98000.00 |    NULL |   NULL |
+|  1111 | Geeta    | NULL      | NULL | NULL       | 10000.00 |  300.00 |     20 |
+|  2222 | Raj      | Analyst   | NULL | NULL       |     NULL |    NULL |     20 |
+|  2000 | sameer   | NULL      | NULL | NULL       | 15000.00 |    NULL |   NULL |
+|  1234 | Sanjivni | NULL      | NULL | NULL       |     NULL |    NULL |   NULL |
++-------+----------+-----------+------+------------+----------+---------+--------+
+20 rows in set (0.00 sec)
+
+mysql> rollback;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> select * from emp10;
++-------+----------+-----------+------+------------+----------+---------+--------+
+| EMPNO | ENAME    | JOB       | MGR  | HIREDATE   | SAL      | COMM    | DEPTNO |
++-------+----------+-----------+------+------------+----------+---------+--------+
+|  7369 | SMITH    | CLERK     | 7902 | 1980-12-17 |   800.00 |    NULL |     20 |
+|  7499 | ALLEN    | SALESMAN  | 7698 | 1981-02-20 |  1600.00 |  300.00 |     30 |
+|  7521 | WARD     | SALESMAN  | 7698 | 1981-02-22 |  1250.00 |  500.00 |     30 |
+|  7566 | JONES    | MANAGER   | 7839 | 1981-04-02 |  2975.00 |    NULL |     20 |
+|  7654 | MARTIN   | SALESMAN  | 7698 | 1981-09-28 |  1250.00 | 1400.00 |     30 |
+|  7698 | BLAKE    | MANAGER   | 7839 | 1981-05-01 |  2850.00 |    NULL |     30 |
+|  7782 | CLARK    | MANAGER   | 7839 | 1981-06-09 |  2450.00 |    NULL |     10 |
+|  7788 | SCOTT    | ANALYST   | 7566 | 1982-12-09 |  3000.00 |    NULL |     20 |
+|  7839 | KING     | PRESIDENT | NULL | 1981-11-17 |  5000.00 |    NULL |     10 |
+|  7844 | TURNER   | SALESMAN  | 7698 | 1981-09-08 |  1500.00 |    0.00 |     30 |
+|  7876 | ADAMS    | CLERK     | 7788 | 1983-01-12 |  1100.00 |    NULL |     20 |
+|  7900 | JAMES    | CLERK     | 7698 | 1981-12-03 |   950.00 |    NULL |     30 |
+|  7902 | FORD     | ANALYST   | 7566 | 1981-12-03 |  3000.00 |    NULL |     20 |
+|  7934 | MILLER   | CLERK     | 7782 | 1982-01-23 |  1300.00 |    NULL |     10 |
+|   999 | Sakshi   | NULL      | NULL | NULL       | 89000.00 |    NULL |   NULL |
+|   999 | Sakshi   | NULL      | NULL | NULL       | 98000.00 |    NULL |   NULL |
+|  1111 | Geeta    | NULL      | NULL | NULL       | 10000.00 |  300.00 |     20 |
+|  2222 | Raj      | Analyst   | NULL | NULL       |     NULL |    NULL |     20 |
+|  2000 | sameer   | NULL      | NULL | NULL       | 15000.00 |    NULL |   NULL |
+|  1234 | Sanjivni | NULL      | NULL | NULL       |     NULL |    NULL |   NULL |
++-------+----------+-----------+------+------------+----------+---------+--------+
+20 rows in set (0.00 sec)
+
+mysql> savepoint x;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> insert into emp10(empno,ename)values(1235,'sara');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> savepoint y;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> insert into emp10(empno,ename)values(1236,'riya');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select * from emp10;
++-------+----------+-----------+------+------------+----------+---------+--------+
+| EMPNO | ENAME    | JOB       | MGR  | HIREDATE   | SAL      | COMM    | DEPTNO |
++-------+----------+-----------+------+------------+----------+---------+--------+
+|  7369 | SMITH    | CLERK     | 7902 | 1980-12-17 |   800.00 |    NULL |     20 |
+|  7499 | ALLEN    | SALESMAN  | 7698 | 1981-02-20 |  1600.00 |  300.00 |     30 |
+|  7521 | WARD     | SALESMAN  | 7698 | 1981-02-22 |  1250.00 |  500.00 |     30 |
+|  7566 | JONES    | MANAGER   | 7839 | 1981-04-02 |  2975.00 |    NULL |     20 |
+|  7654 | MARTIN   | SALESMAN  | 7698 | 1981-09-28 |  1250.00 | 1400.00 |     30 |
+|  7698 | BLAKE    | MANAGER   | 7839 | 1981-05-01 |  2850.00 |    NULL |     30 |
+|  7782 | CLARK    | MANAGER   | 7839 | 1981-06-09 |  2450.00 |    NULL |     10 |
+|  7788 | SCOTT    | ANALYST   | 7566 | 1982-12-09 |  3000.00 |    NULL |     20 |
+|  7839 | KING     | PRESIDENT | NULL | 1981-11-17 |  5000.00 |    NULL |     10 |
+|  7844 | TURNER   | SALESMAN  | 7698 | 1981-09-08 |  1500.00 |    0.00 |     30 |
+|  7876 | ADAMS    | CLERK     | 7788 | 1983-01-12 |  1100.00 |    NULL |     20 |
+|  7900 | JAMES    | CLERK     | 7698 | 1981-12-03 |   950.00 |    NULL |     30 |
+|  7902 | FORD     | ANALYST   | 7566 | 1981-12-03 |  3000.00 |    NULL |     20 |
+|  7934 | MILLER   | CLERK     | 7782 | 1982-01-23 |  1300.00 |    NULL |     10 |
+|   999 | Sakshi   | NULL      | NULL | NULL       | 89000.00 |    NULL |   NULL |
+|   999 | Sakshi   | NULL      | NULL | NULL       | 98000.00 |    NULL |   NULL |
+|  1111 | Geeta    | NULL      | NULL | NULL       | 10000.00 |  300.00 |     20 |
+|  2222 | Raj      | Analyst   | NULL | NULL       |     NULL |    NULL |     20 |
+|  2000 | sameer   | NULL      | NULL | NULL       | 15000.00 |    NULL |   NULL |
+|  1234 | Sanjivni | NULL      | NULL | NULL       |     NULL |    NULL |   NULL |
+|  1235 | sara     | NULL      | NULL | NULL       |     NULL |    NULL |   NULL |
+|  1236 | riya     | NULL      | NULL | NULL       |     NULL |    NULL |   NULL |
++-------+----------+-----------+------+------------+----------+---------+--------+
+22 rows in set (0.00 sec)
+
+
+mysql> rollback to y;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> select * from emp10;
++-------+----------+-----------+------+------------+----------+---------+--------+
+| EMPNO | ENAME    | JOB       | MGR  | HIREDATE   | SAL      | COMM    | DEPTNO |
++-------+----------+-----------+------+------------+----------+---------+--------+
+|  7369 | SMITH    | CLERK     | 7902 | 1980-12-17 |   800.00 |    NULL |     20 |
+|  7499 | ALLEN    | SALESMAN  | 7698 | 1981-02-20 |  1600.00 |  300.00 |     30 |
+|  7521 | WARD     | SALESMAN  | 7698 | 1981-02-22 |  1250.00 |  500.00 |     30 |
+|  7566 | JONES    | MANAGER   | 7839 | 1981-04-02 |  2975.00 |    NULL |     20 |
+|  7654 | MARTIN   | SALESMAN  | 7698 | 1981-09-28 |  1250.00 | 1400.00 |     30 |
+|  7698 | BLAKE    | MANAGER   | 7839 | 1981-05-01 |  2850.00 |    NULL |     30 |
+|  7782 | CLARK    | MANAGER   | 7839 | 1981-06-09 |  2450.00 |    NULL |     10 |
+|  7788 | SCOTT    | ANALYST   | 7566 | 1982-12-09 |  3000.00 |    NULL |     20 |
+|  7839 | KING     | PRESIDENT | NULL | 1981-11-17 |  5000.00 |    NULL |     10 |
+|  7844 | TURNER   | SALESMAN  | 7698 | 1981-09-08 |  1500.00 |    0.00 |     30 |
+|  7876 | ADAMS    | CLERK     | 7788 | 1983-01-12 |  1100.00 |    NULL |     20 |
+|  7900 | JAMES    | CLERK     | 7698 | 1981-12-03 |   950.00 |    NULL |     30 |
+|  7902 | FORD     | ANALYST   | 7566 | 1981-12-03 |  3000.00 |    NULL |     20 |
+|  7934 | MILLER   | CLERK     | 7782 | 1982-01-23 |  1300.00 |    NULL |     10 |
+|   999 | Sakshi   | NULL      | NULL | NULL       | 89000.00 |    NULL |   NULL |
+|   999 | Sakshi   | NULL      | NULL | NULL       | 98000.00 |    NULL |   NULL |
+|  1111 | Geeta    | NULL      | NULL | NULL       | 10000.00 |  300.00 |     20 |
+|  2222 | Raj      | Analyst   | NULL | NULL       |     NULL |    NULL |     20 |
+|  2000 | sameer   | NULL      | NULL | NULL       | 15000.00 |    NULL |   NULL |
+|  1234 | Sanjivni | NULL      | NULL | NULL       |     NULL |    NULL |   NULL |
+|  1235 | sara     | NULL      | NULL | NULL       |     NULL |    NULL |   NULL |
++-------+----------+-----------+------+------------+----------+---------+--------+
+21 rows in set (0.00 sec)
+
+mysql> rollback to x;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> select * from emp10;
++-------+----------+-----------+------+------------+----------+---------+--------+
+| EMPNO | ENAME    | JOB       | MGR  | HIREDATE   | SAL      | COMM    | DEPTNO |
++-------+----------+-----------+------+------------+----------+---------+--------+
+|  7369 | SMITH    | CLERK     | 7902 | 1980-12-17 |   800.00 |    NULL |     20 |
+|  7499 | ALLEN    | SALESMAN  | 7698 | 1981-02-20 |  1600.00 |  300.00 |     30 |
+|  7521 | WARD     | SALESMAN  | 7698 | 1981-02-22 |  1250.00 |  500.00 |     30 |
+|  7566 | JONES    | MANAGER   | 7839 | 1981-04-02 |  2975.00 |    NULL |     20 |
+|  7654 | MARTIN   | SALESMAN  | 7698 | 1981-09-28 |  1250.00 | 1400.00 |     30 |
+|  7698 | BLAKE    | MANAGER   | 7839 | 1981-05-01 |  2850.00 |    NULL |     30 |
+|  7782 | CLARK    | MANAGER   | 7839 | 1981-06-09 |  2450.00 |    NULL |     10 |
+|  7788 | SCOTT    | ANALYST   | 7566 | 1982-12-09 |  3000.00 |    NULL |     20 |
+|  7839 | KING     | PRESIDENT | NULL | 1981-11-17 |  5000.00 |    NULL |     10 |
+|  7844 | TURNER   | SALESMAN  | 7698 | 1981-09-08 |  1500.00 |    0.00 |     30 |
+|  7876 | ADAMS    | CLERK     | 7788 | 1983-01-12 |  1100.00 |    NULL |     20 |
+|  7900 | JAMES    | CLERK     | 7698 | 1981-12-03 |   950.00 |    NULL |     30 |
+|  7902 | FORD     | ANALYST   | 7566 | 1981-12-03 |  3000.00 |    NULL |     20 |
+|  7934 | MILLER   | CLERK     | 7782 | 1982-01-23 |  1300.00 |    NULL |     10 |
+|   999 | Sakshi   | NULL      | NULL | NULL       | 89000.00 |    NULL |   NULL |
+|   999 | Sakshi   | NULL      | NULL | NULL       | 98000.00 |    NULL |   NULL |
+|  1111 | Geeta    | NULL      | NULL | NULL       | 10000.00 |  300.00 |     20 |
+|  2222 | Raj      | Analyst   | NULL | NULL       |     NULL |    NULL |     20 |
+|  2000 | sameer   | NULL      | NULL | NULL       | 15000.00 |    NULL |   NULL |
+|  1234 | Sanjivni | NULL      | NULL | NULL       |     NULL |    NULL |   NULL |
++-------+----------+-----------+------+------------+----------+---------+--------+
+20 rows in set (0.00 sec)

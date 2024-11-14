@@ -1,0 +1,624 @@
+Assignment 4:
+1.
+ select date_format(hiredate,'%y'),date_format(hiredate,'%Y'),date_format(hiredate,'%m'),date_format(hiredate,'%M'),date_format(hiredate,'%d'),date_format(hiredate,'%D'),date_format(hiredate,'%b') from emp;
++----------------------------+----------------------------+----------------------------+----------------------------+----------------------------+----------------------------+----------------------------+
+| date_format(hiredate,'%y') | date_format(hiredate,'%Y') | date_format(hiredate,'%m') | date_format(hiredate,'%M') | date_format(hiredate,'%d') | date_format(hiredate,'%D') | date_format(hiredate,'%b') |
++----------------------------+----------------------------+----------------------------+----------------------------+----------------------------+----------------------------+----------------------------+
+| 80                         | 1980                       | 12                         | December                   | 17                         | 17th                       | Dec                        |
+| 81                         | 1981                       | 02                         | February                   | 20                         | 20th                       | Feb                        |
+| 81                         | 1981                       | 02                         | February                   | 22                         | 22nd                       | Feb                        |
+| 81                         | 1981                       | 04                         | April                      | 02                         | 2nd                        | Apr                        |
+| 81                         | 1981                       | 09                         | September                  | 28                         | 28th                       | Sep                        |
+| 81                         | 1981                       | 05                         | May                        | 01                         | 1st                        | May                        |
+| 81                         | 1981                       | 06                         | June                       | 09                         | 9th                        | Jun                        |
+| 82                         | 1982                       | 12                         | December                   | 09                         | 9th                        | Dec                        |
+| 81                         | 1981                       | 11                         | November                   | 17                         | 17th                       | Nov                        |
+| 81                         | 1981                       | 09                         | September                  | 08                         | 8th                        | Sep                        |
+| 83                         | 1983                       | 01                         | January                    | 12                         | 12th                       | Jan                        |
+| 81                         | 1981                       | 12                         | December                   | 03                         | 3rd                        | Dec                        |
+| 81                         | 1981                       | 12                         | December                   | 03                         | 3rd                        | Dec                        |
+| 82                         | 1982                       | 01                         | January                    | 23                         | 23rd                       | Jan                        |
++----------------------------+----------------------------+----------------------------+----------------------------+----------------------------+----------------------------+----------------------------+
+14 rows in set (0.00 sec)
+
+2.
+ select * from emp where mod(sal,3)=0;
++-------+--------+----------+------+------------+---------+------+--------+
+| EMPNO | ENAME  | JOB      | MGR  | HIREDATE   | SAL     | COMM | DEPTNO |
++-------+--------+----------+------+------------+---------+------+--------+
+|  7698 | BLAKE  | MANAGER  | 7839 | 1981-05-01 | 2850.00 | NULL |     30 |
+|  7788 | SCOTT  | ANALYST  | 7566 | 1982-12-09 | 3000.00 | NULL |     20 |
+|  7844 | TURNER | SALESMAN | 7698 | 1981-09-08 | 1500.00 | 0.00 |     30 |
+|  7902 | FORD   | ANALYST  | 7566 | 1981-12-03 | 3000.00 | NULL |     20 |
++-------+--------+----------+------+------------+---------+------+--------+
+4 rows in set (0.00 sec)
+3.
+ select concat(ename,'****',round(sal)) from emp;
++---------------------------------+
+| concat(ename,'****',round(sal)) |
++---------------------------------+
+| SMITH****800                    |
+| ALLEN****1600                   |
+| WARD****1250                    |
+| JONES****2975                   |
+| MARTIN****1250                  |
+| BLAKE****2850                   |
+| CLARK****2450                   |
+| SCOTT****3000                   |
+| KING****5000                    |
+| TURNER****1500                  |
+| ADAMS****1100                   |
+| JAMES****950                    |
+| FORD****3000                    |
+| MILLER****1300                  |
++---------------------------------+
+14 rows in set (0.00 sec)
+4.
+mysql> select concat(ename,'@mycompany.com') as email from emp;
++----------------------+
+| email                |
++----------------------+
+| SMITH@mycompany.com  |
+| ALLEN@mycompany.com  |
+| WARD@mycompany.com   |
+| JONES@mycompany.com  |
+| MARTIN@mycompany.com |
+| BLAKE@mycompany.com  |
+| CLARK@mycompany.com  |
+| SCOTT@mycompany.com  |
+| KING@mycompany.com   |
+| TURNER@mycompany.com |
+| ADAMS@mycompany.com  |
+| JAMES@mycompany.com  |
+| FORD@mycompany.com   |
+| MILLER@mycompany.com |
++----------------------+
+14 rows in set (0.00 sec)
+5.
+mysql> select ename,length(ename) from  emp;
++--------+---------------+
+| ename  | length(ename) |
++--------+---------------+
+| SMITH  |             5 |
+| ALLEN  |             5 |
+| WARD   |             4 |
+| JONES  |             5 |
+| MARTIN |             6 |
+| BLAKE  |             5 |
+| CLARK  |             5 |
+| SCOTT  |             5 |
+| KING   |             4 |
+| TURNER |             6 |
+| ADAMS  |             5 |
+| JAMES  |             5 |
+| FORD   |             4 |
+| MILLER |             6 |
++--------+---------------+
+14 rows in set (0.00 sec)
+6.
+mysql> select concat(substr(ename,1,3),'.',substr(job,2,2),'@MyCompany') as email from emp;
++------------------+
+| email            |
++------------------+
+| SMI.LE@MyCompany |
+| ALL.AL@MyCompany |
+| WAR.AL@MyCompany |
+| JON.AN@MyCompany |
+| MAR.AL@MyCompany |
+| BLA.AN@MyCompany |
+| CLA.AN@MyCompany |
+| SCO.NA@MyCompany |
+| KIN.RE@MyCompany |
+| TUR.AL@MyCompany |
+| ADA.LE@MyCompany |
+| JAM.LE@MyCompany |
+| FOR.NA@MyCompany |
+| MIL.LE@MyCompany |
++------------------+
+14 rows in set (0.00 sec)
+
+
+
+
+
+7.
+mysql> select concat(upper(substr(ename,1,1)),lower(substr(ename,2,length(ename)))) as name,concat(upper(substr(job,1,1)),lower(substr(job,2,length(job)))) as job from emp;
++--------+-----------+
+| name   | job       |
++--------+-----------+
+| Smith  | Clerk     |
+| Allen  | Salesman  |
+| Ward   | Salesman  |
+| Jones  | Manager   |
+| Martin | Salesman  |
+| Blake  | Manager   |
+| Clark  | Manager   |
+| Scott  | Analyst   |
+| King   | President |
+| Turner | Salesman  |
+| Adams  | Clerk     |
+| James  | Clerk     |
+| Ford   | Analyst   |
+| Miller | Clerk     |
++--------+-----------+
+14 rows in set (0.00 sec)
+
+
+8.
+mysql> select concat(lower(substr(ename,1,3)),substr(ename,4,length(ename))) as name from emp;
++--------+
+| name   |
++--------+
+| smiTH  |
+| allEN  |
+| warD   |
+| jonES  |
+| marTIN |
+| blaKE  |
+| claRK  |
+| scoTT  |
+| kinG   |
+| turNER |
+| adaMS  |
+| jamES  |
+| forD   |
+| milLER |
++--------+
+14 rows in set (0.00 sec)
+
+9.
+
+mysql>  select substr(ename,length(ename)-2,length(ename))as name from emp;
++------+
+| name |
++------+
+| ITH  |
+| LEN  |
+| ARD  |
+| NES  |
+| TIN  |
+| AKE  |
+| ARK  |
+| OTT  |
+| ING  |
+| NER  |
+| AMS  |
+| MES  |
+| ORD  |
+| LER  |
++------+
+14 rows in set (0.00 sec)
+
+10.
+mysql> select concat(lower(substr(ename,1,3)),lower(substr(job,length(job)-2,length(job))),'@knowit.com') as "email-id" from emp;
++-------------------+
+| email-id          |
++-------------------+
+| smierk@knowit.com |
+| allman@knowit.com |
+| warman@knowit.com |
+| jonger@knowit.com |
+| marman@knowit.com |
+| blager@knowit.com |
+| clager@knowit.com |
+| scoyst@knowit.com |
+| kinent@knowit.com |
+| turman@knowit.com |
+| adaerk@knowit.com |
+| jamerk@knowit.com |
+| foryst@knowit.com |
+| milerk@knowit.com |
++-------------------+
+14 rows in set (0.00 sec)
+11.
+mysql> select ename,hiredate from emp where floor(datediff(now(),hiredate)/365)>40;
++--------+------------+
+| ename  | hiredate   |
++--------+------------+
+| SMITH  | 1980-12-17 |
+| ALLEN  | 1981-02-20 |
+| WARD   | 1981-02-22 |
+| JONES  | 1981-04-02 |
+| MARTIN | 1981-09-28 |
+| BLAKE  | 1981-05-01 |
+| CLARK  | 1981-06-09 |
+| SCOTT  | 1982-12-09 |
+| KING   | 1981-11-17 |
+| TURNER | 1981-09-08 |
+| ADAMS  | 1983-01-12 |
+| JAMES  | 1981-12-03 |
+| FORD   | 1981-12-03 |
+| MILLER | 1982-01-23 |
++--------+------------+
+14 rows in set (0.00 sec)
+12.
+mysql> select ename,sal,(sal+sal*0.1) as newsal from emp where floor(datediff(now(),hiredate)/365)>40;
++--------+---------+----------+
+| ename  | sal     | newsal   |
++--------+---------+----------+
+| SMITH  |  800.00 |  880.000 |
+| ALLEN  | 1600.00 | 1760.000 |
+| WARD   | 1250.00 | 1375.000 |
+| JONES  | 2975.00 | 3272.500 |
+| MARTIN | 1250.00 | 1375.000 |
+| BLAKE  | 2850.00 | 3135.000 |
+| CLARK  | 2450.00 | 2695.000 |
+| SCOTT  | 3000.00 | 3300.000 |
+| KING   | 5000.00 | 5500.000 |
+| TURNER | 1500.00 | 1650.000 |
+| ADAMS  | 1100.00 | 1210.000 |
+| JAMES  |  950.00 | 1045.000 |
+| FORD   | 3000.00 | 3300.000 |
+| MILLER | 1300.00 | 1430.000 |
++--------+---------+----------+
+14 rows in set (0.00 sec)
+13.
+mysql> select ename,case when comm<500 then "OK" when comm >=500 and comm<1000 then "GOOD"
+    -> when comm is null then "NEED IMPROVEMENT" else "Excellent" end "REMARK" from emp;
++--------+------------------+
+| ename  | REMARK           |
++--------+------------------+
+| SMITH  | NEED IMPROVEMENT |
+| ALLEN  | OK               |
+| WARD   | GOOD             |
+| JONES  | NEED IMPROVEMENT |
+| MARTIN | Excellent        |
+| BLAKE  | NEED IMPROVEMENT |
+| CLARK  | NEED IMPROVEMENT |
+| SCOTT  | NEED IMPROVEMENT |
+| KING   | NEED IMPROVEMENT |
+| TURNER | OK               |
+| ADAMS  | NEED IMPROVEMENT |
+| JAMES  | NEED IMPROVEMENT |
+| FORD   | NEED IMPROVEMENT |
+| MILLER | NEED IMPROVEMENT |
++--------+------------------+
+14 rows in set (0.00 sec)
+14.
+mysql> select * from emp where sal between 1000 and 3000 ;
++-------+--------+----------+------+------------+---------+---------+--------+
+| EMPNO | ENAME  | JOB      | MGR  | HIREDATE   | SAL     | COMM    | DEPTNO |
++-------+--------+----------+------+------------+---------+---------+--------+
+|  7499 | ALLEN  | SALESMAN | 7698 | 1981-02-20 | 1600.00 |  300.00 |     30 |
+|  7521 | WARD   | SALESMAN | 7698 | 1981-02-22 | 1250.00 |  500.00 |     30 |
+|  7566 | JONES  | MANAGER  | 7839 | 1981-04-02 | 2975.00 |    NULL |     20 |
+|  7654 | MARTIN | SALESMAN | 7698 | 1981-09-28 | 1250.00 | 1400.00 |     30 |
+|  7698 | BLAKE  | MANAGER  | 7839 | 1981-05-01 | 2850.00 |    NULL |     30 |
+|  7782 | CLARK  | MANAGER  | 7839 | 1981-06-09 | 2450.00 |    NULL |     10 |
+|  7788 | SCOTT  | ANALYST  | 7566 | 1982-12-09 | 3000.00 |    NULL |     20 |
+|  7844 | TURNER | SALESMAN | 7698 | 1981-09-08 | 1500.00 |    0.00 |     30 |
+|  7876 | ADAMS  | CLERK    | 7788 | 1983-01-12 | 1100.00 |    NULL |     20 |
+|  7902 | FORD   | ANALYST  | 7566 | 1981-12-03 | 3000.00 |    NULL |     20 |
+|  7934 | MILLER | CLERK    | 7782 | 1982-01-23 | 1300.00 |    NULL |     10 |
++-------+--------+----------+------+------------+---------+---------+--------+
+11 rows in set (0.00 sec)
+15.
+mysql> select lpad(ename,10,' ') as ename ,rpad(job,9,' ') as job from emp;
++------------+-----------+
+| ename      | job       |
++------------+-----------+
+|      SMITH | CLERK     |
+|      ALLEN | SALESMAN  |
+|       WARD | SALESMAN  |
+|      JONES | MANAGER   |
+|     MARTIN | SALESMAN  |
+|      BLAKE | MANAGER   |
+|      CLARK | MANAGER   |
+|      SCOTT | ANALYST   |
+|       KING | PRESIDENT |
+|     TURNER | SALESMAN  |
+|      ADAMS | CLERK     |
+|      JAMES | CLERK     |
+|       FORD | ANALYST   |
+|     MILLER | CLERK     |
++------------+-----------+
+14 rows in set (0.00 sec)
+
+16.
+mysql> select concat("Hello ",concat(upper(substr(ename,1,1)),lower(substr(ename,2,length(ename)))),'!') as "greetings" from emp where  comm is not null and comm!=0 ;
++---------------+
+| greetings     |
++---------------+
+| Hello Allen!  |
+| Hello Ward!   |
+| Hello Martin! |
++---------------+
+3 rows in set (0.00 sec)
+
+17.
+
+mysql> select concat("Hello ",concat(upper(substr(ename,1,1)),lower(substr(ename,2,length(ename)))),'.')  as greet from emp;
++---------------+
+| greet         |
++---------------+
+| Hello Smith.  |
+| Hello Allen.  |
+| Hello Ward.   |
+| Hello Jones.  |
+| Hello Martin. |
+| Hello Blake.  |
+| Hello Clark.  |
+| Hello Scott.  |
+| Hello King.   |
+| Hello Turner. |
+| Hello Adams.  |
+| Hello James.  |
+| Hello Ford.   |
+| Hello Miller. |
++---------------+
+14 rows in set (0.00 sec)
+18.
+mysql> select concat(ename,' is a ',lower(job)) as description from emp;
++----------------------+
+| description          |
++----------------------+
+| SMITH is a clerk     |
+| ALLEN is a salesman  |
+| WARD is a salesman   |
+| JONES is a manager   |
+| MARTIN is a salesman |
+| BLAKE is a manager   |
+| CLARK is a manager   |
+| SCOTT is a analyst   |
+| KING is a president  |
+| TURNER is a salesman |
+| ADAMS is a clerk     |
+| JAMES is a clerk     |
+| FORD is a analyst    |
+| MILLER is a clerk    |
++----------------------+
+14 rows in set (0.00 sec)
+
+19.
+mysql> select concat(empno,',',ename,',',job,',',ifnull(mgr,'null'),',',hiredate,',',sal,',',ifnull(comm,'null'),',',deptno) as info from emp;
++---------------------------------------------------------+
+| info                                                    |
++---------------------------------------------------------+
+| 7369,SMITH,CLERK,7902,1980-12-17,800.00,null,20         |
+| 7499,ALLEN,SALESMAN,7698,1981-02-20,1600.00,300.00,30   |
+| 7521,WARD,SALESMAN,7698,1981-02-22,1250.00,500.00,30    |
+| 7566,JONES,MANAGER,7839,1981-04-02,2975.00,null,20      |
+| 7654,MARTIN,SALESMAN,7698,1981-09-28,1250.00,1400.00,30 |
+| 7698,BLAKE,MANAGER,7839,1981-05-01,2850.00,null,30      |
+| 7782,CLARK,MANAGER,7839,1981-06-09,2450.00,null,10      |
+| 7788,SCOTT,ANALYST,7566,1982-12-09,3000.00,null,20      |
+| 7839,KING,PRESIDENT,null,1981-11-17,5000.00,null,10     |
+| 7844,TURNER,SALESMAN,7698,1981-09-08,1500.00,0.00,30    |
+| 7876,ADAMS,CLERK,7788,1983-01-12,1100.00,null,20        |
+| 7900,JAMES,CLERK,7698,1981-12-03,950.00,null,30         |
+| 7902,FORD,ANALYST,7566,1981-12-03,3000.00,null,20       |
+| 7934,MILLER,CLERK,7782,1982-01-23,1300.00,null,10       |
++---------------------------------------------------------+
+14 rows in set (0.00 sec)
+20.
+mysql> select deptno,count(*) from emp where job='analyst' group by deptno;
++--------+----------+
+| deptno | count(*) |
++--------+----------+
+|     20 |        2 |
++--------+----------+
+1 row in set (0.00 sec)
+
+21.
+mysql> select max(sal),min(sal),sum(sal) from emp where sal>1500 and sal<3000;
++----------+----------+----------+
+| max(sal) | min(sal) | sum(sal) |
++----------+----------+----------+
+|  2975.00 |  1600.00 |  9875.00 |
++----------+----------+----------+
+1 row in set (0.00 sec)
+
+22.
+mysql> select ename,sal from emp where deptno=10 order by sal desc;
++--------+---------+
+| ename  | sal     |
++--------+---------+
+| KING   | 5000.00 |
+| CLARK  | 2450.00 |
+| MILLER | 1300.00 |
++--------+---------+
+3 rows in set (0.00 sec)
+23.
+mysql> select ename,deptno,hiredate from emp where hiredate between '1981-1-1' and '1983-03-31' order by hiredate;
++--------+--------+------------+
+| ename  | deptno | hiredate   |
++--------+--------+------------+
+| ALLEN  |     30 | 1981-02-20 |
+| WARD   |     30 | 1981-02-22 |
+| JONES  |     20 | 1981-04-02 |
+| BLAKE  |     30 | 1981-05-01 |
+| CLARK  |     10 | 1981-06-09 |
+| TURNER |     30 | 1981-09-08 |
+| MARTIN |     30 | 1981-09-28 |
+| KING   |     10 | 1981-11-17 |
+| FORD   |     20 | 1981-12-03 |
+| JAMES  |     30 | 1981-12-03 |
+| MILLER |     10 | 1982-01-23 |
+| SCOTT  |     20 | 1982-12-09 |
+| ADAMS  |     20 | 1983-01-12 |
++--------+--------+------------+
+13 rows in set (0.00 sec)
+24.
+mysql> select count(*) from emp where comm is not null and comm!=0;
++----------+
+| count(*) |
++----------+
+|        3 |
++----------+
+1 row in set (0.00 sec)
+25.
+mysql> select sum(sal) from emp;
++----------+
+| sum(sal) |
++----------+
+| 29025.00 |
++----------+
+1 row in set (0.00 sec)
+
+26.
+mysql> select deptno,sum(sal) from emp group by deptno;
++--------+----------+
+| deptno | sum(sal) |
++--------+----------+
+|     10 |  8750.00 |
+|     20 | 10875.00 |
+|     30 |  9400.00 |
++--------+----------+
+3 rows in set (0.00 sec)
+
+27.
+mysql> select deptno,sum(sal) from emp  group by deptno having sum(sal)>8000;
++--------+----------+
+| deptno | sum(sal) |
++--------+----------+
+|     10 |  8750.00 |
+|     20 | 10875.00 |
+|     30 |  9400.00 |
++--------+----------+
+3 rows in set (0.00 sec)
+28.
+mysql> select deptno,count(*) from emp where job='clerk' and deptno in(10,20) group by deptno;
++--------+----------+
+| deptno | count(*) |
++--------+----------+
+|     10 |        1 |
+|     20 |        2 |
++--------+----------+
+2 rows in set (0.00 sec)
+29.
+mysql> select job ,sum(sal) from emp where deptno!=30 group by job having sum(sal)>5000;
++---------+----------+
+| job     | sum(sal) |
++---------+----------+
+| ANALYST |  6000.00 |
+| MANAGER |  5425.00 |
++---------+----------+
+2 rows in set (0.00 sec)
+30.
+mysql> select * from emp where mod(sal,3)=0;
++-------+--------+----------+------+------------+---------+------+--------+
+| EMPNO | ENAME  | JOB      | MGR  | HIREDATE   | SAL     | COMM | DEPTNO |
++-------+--------+----------+------+------------+---------+------+--------+
+|  7698 | BLAKE  | MANAGER  | 7839 | 1981-05-01 | 2850.00 | NULL |     30 |
+|  7788 | SCOTT  | ANALYST  | 7566 | 1982-12-09 | 3000.00 | NULL |     20 |
+|  7844 | TURNER | SALESMAN | 7698 | 1981-09-08 | 1500.00 | 0.00 |     30 |
+|  7902 | FORD   | ANALYST  | 7566 | 1981-12-03 | 3000.00 | NULL |     20 |
++-------+--------+----------+------+------------+---------+------+--------+
+4 rows in set (0.00 sec)
+31.
+mysql> select* from emp where job in('manager','clerk') and sal>2000 and deptno not in(10,20);
++-------+-------+---------+------+------------+---------+------+--------+
+| EMPNO | ENAME | JOB     | MGR  | HIREDATE   | SAL     | COMM | DEPTNO |
++-------+-------+---------+------+------------+---------+------+--------+
+|  7698 | BLAKE | MANAGER | 7839 | 1981-05-01 | 2850.00 | NULL |     30 |
++-------+-------+---------+------+------------+---------+------+--------+
+1 row in set (0.00 sec)
+32.
+mysql> select* from emp where job in('clerk','analyst') and sal>=1000 and deptno in(20,30);
++-------+-------+---------+------+------------+---------+------+--------+
+| EMPNO | ENAME | JOB     | MGR  | HIREDATE   | SAL     | COMM | DEPTNO |
++-------+-------+---------+------+------------+---------+------+--------+
+|  7788 | SCOTT | ANALYST | 7566 | 1982-12-09 | 3000.00 | NULL |     20 |
+|  7876 | ADAMS | CLERK   | 7788 | 1983-01-12 | 1100.00 | NULL |     20 |
+|  7902 | FORD  | ANALYST | 7566 | 1981-12-03 | 3000.00 | NULL |     20 |
++-------+-------+---------+------+------------+---------+------+--------+
+3 rows in set (0.00 sec)
+
+33.
+mysql> select * from emp where deptno in(10,30) or extract(year from hiredate)=1982;
++-------+--------+-----------+------+------------+---------+---------+--------+
+| EMPNO | ENAME  | JOB       | MGR  | HIREDATE   | SAL     | COMM    | DEPTNO |
++-------+--------+-----------+------+------------+---------+---------+--------+
+|  7499 | ALLEN  | SALESMAN  | 7698 | 1981-02-20 | 1600.00 |  300.00 |     30 |
+|  7521 | WARD   | SALESMAN  | 7698 | 1981-02-22 | 1250.00 |  500.00 |     30 |
+|  7654 | MARTIN | SALESMAN  | 7698 | 1981-09-28 | 1250.00 | 1400.00 |     30 |
+|  7698 | BLAKE  | MANAGER   | 7839 | 1981-05-01 | 2850.00 |    NULL |     30 |
+|  7782 | CLARK  | MANAGER   | 7839 | 1981-06-09 | 2450.00 |    NULL |     10 |
+|  7788 | SCOTT  | ANALYST   | 7566 | 1982-12-09 | 3000.00 |    NULL |     20 |
+|  7839 | KING   | PRESIDENT | NULL | 1981-11-17 | 5000.00 |    NULL |     10 |
+|  7844 | TURNER | SALESMAN  | 7698 | 1981-09-08 | 1500.00 |    0.00 |     30 |
+|  7900 | JAMES  | CLERK     | 7698 | 1981-12-03 |  950.00 |    NULL |     30 |
+|  7934 | MILLER | CLERK     | 7782 | 1982-01-23 | 1300.00 |    NULL |     10 |
++-------+--------+-----------+------+------------+---------+---------+--------+
+10 rows in set (0.00 sec)
+34.
+mysql> select ename,deptno,hiredate from emp where hiredate between '1981-1-1' and '1983-03-31' order by hiredate ;
++--------+--------+------------+
+| ename  | deptno | hiredate   |
++--------+--------+------------+
+| ALLEN  |     30 | 1981-02-20 |
+| WARD   |     30 | 1981-02-22 |
+| JONES  |     20 | 1981-04-02 |
+| BLAKE  |     30 | 1981-05-01 |
+| CLARK  |     10 | 1981-06-09 |
+| TURNER |     30 | 1981-09-08 |
+| MARTIN |     30 | 1981-09-28 |
+| KING   |     10 | 1981-11-17 |
+| FORD   |     20 | 1981-12-03 |
+| JAMES  |     30 | 1981-12-03 |
+| MILLER |     10 | 1982-01-23 |
+| SCOTT  |     20 | 1982-12-09 |
+| ADAMS  |     20 | 1983-01-12 |
++--------+--------+------------+
+13 rows in set (0.00 sec)
+35.
+mysql> select* from emp where deptno in(20,30) and comm is not null and comm!=0;
++-------+--------+----------+------+------------+---------+---------+--------+
+| EMPNO | ENAME  | JOB      | MGR  | HIREDATE   | SAL     | COMM    | DEPTNO |
++-------+--------+----------+------+------------+---------+---------+--------+
+|  7499 | ALLEN  | SALESMAN | 7698 | 1981-02-20 | 1600.00 |  300.00 |     30 |
+|  7521 | WARD   | SALESMAN | 7698 | 1981-02-22 | 1250.00 |  500.00 |     30 |
+|  7654 | MARTIN | SALESMAN | 7698 | 1981-09-28 | 1250.00 | 1400.00 |     30 |
++-------+--------+----------+------+------------+---------+---------+--------+
+3 rows in set (0.00 sec)
+
+36.
+13 rows in set (0.00 sec)
+mysql> select job,max(sal) from emp where job in ('manager','clerk','salesman') and deptno in(10,20) group by job order by max(sal) desc;
++---------+----------+
+| job     | max(sal) |
++---------+----------+
+| MANAGER |  2975.00 |
+| CLERK   |  1300.00 |
++---------+----------+
+2 rows in set (0.00 sec)
+37.
+mysql> select ename,deptno,hiredate from emp where hiredate between '1981-1-1' and '1983-03-31' order by hiredate ;
++--------+--------+------------+
+| ename  | deptno | hiredate   |
++--------+--------+------------+
+| ALLEN  |     30 | 1981-02-20 |
+| WARD   |     30 | 1981-02-22 |
+| JONES  |     20 | 1981-04-02 |
+| BLAKE  |     30 | 1981-05-01 |
+| CLARK  |     10 | 1981-06-09 |
+| TURNER |     30 | 1981-09-08 |
+| MARTIN |     30 | 1981-09-28 |
+| KING   |     10 | 1981-11-17 |
+| FORD   |     20 | 1981-12-03 |
+| JAMES  |     30 | 1981-12-03 |
+| MILLER |     10 | 1982-01-23 |
+| SCOTT  |     20 | 1982-12-09 |
+| ADAMS  |     20 | 1983-01-12 |
++--------+--------+------------+
+38.
+ select date_format(hiredate,'%y'),date_format(hiredate,'%Y'),date_format(hiredate,'%m'),date_format(hiredate,'%M'),date_format(hiredate,'%d'),date_format(hiredate,'%D'),date_format(hiredate,'%b') from emp;
++----------------------------+----------------------------+----------------------------+----------------------------+----------------------------+----------------------------+----------------------------+
+| date_format(hiredate,'%y') | date_format(hiredate,'%Y') | date_format(hiredate,'%m') | date_format(hiredate,'%M') | date_format(hiredate,'%d') | date_format(hiredate,'%D') | date_format(hiredate,'%b') |
++----------------------------+----------------------------+----------------------------+----------------------------+----------------------------+----------------------------+----------------------------+
+| 80                         | 1980                       | 12                         | December                   | 17                         | 17th                       | Dec                        |
+| 81                         | 1981                       | 02                         | February                   | 20                         | 20th                       | Feb                        |
+| 81                         | 1981                       | 02                         | February                   | 22                         | 22nd                       | Feb                        |
+| 81                         | 1981                       | 04                         | April                      | 02                         | 2nd                        | Apr                        |
+| 81                         | 1981                       | 09                         | September                  | 28                         | 28th                       | Sep                        |
+| 81                         | 1981                       | 05                         | May                        | 01                         | 1st                        | May                        |
+| 81                         | 1981                       | 06                         | June                       | 09                         | 9th                        | Jun                        |
+| 82                         | 1982                       | 12                         | December                   | 09                         | 9th                        | Dec                        |
+| 81                         | 1981                       | 11                         | November                   | 17                         | 17th                       | Nov                        |
+| 81                         | 1981                       | 09                         | September                  | 08                         | 8th                        | Sep                        |
+| 83                         | 1983                       | 01                         | January                    | 12                         | 12th                       | Jan                        |
+| 81                         | 1981                       | 12                         | December                   | 03                         | 3rd                        | Dec                        |
+| 81                         | 1981                       | 12                         | December                   | 03                         | 3rd                        | Dec                        |
+| 82                         | 1982                       | 01                         | January                    | 23                         | 23rd                       | Jan                        |
++----------------------------+----------------------------+----------------------------+----------------------------+----------------------------+----------------------------+----------------------------+
+14 rows in set (0.00 sec)
